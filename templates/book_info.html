@@ -1,0 +1,137 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>HUSTLib - Thư viện của sinh viên BKHN</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}">
+    <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Verdana">
+</head>
+<body>
+
+
+{% with messages = get_flashed_messages() %}
+    {% if messages %}
+      <div class="flash-messages">
+        {% for message in messages %}
+          <div class="flash-message">{{ message }}</div>
+        {% endfor %}
+      </div>
+    {% endif %}
+{% endwith %}
+
+
+
+<div class="banner">
+    <img src="{{ url_for('static', filename='images/banner.png') }}" class="banner-image">
+    <div class="banner-login">
+        {% if 'user_id' in session %}
+        <a id="link-group" href="/search_rent_page">Quản lí</a>
+        <a id="link-profile" href="/profile_page/{{ session.get('user_id', '') }}">Hồ sơ</a>
+        <a id="link-group" href="/chat_group_page">Hội nhóm</a>
+        <a id="link-cart" href="/cart_page">Giỏ mượn</a>
+        <a id="link-logout" href="/logout">Đăng xuất</a>
+        {% else %}
+        <a id="link-login" href="/login_page">Đăng nhập</a>
+        <a id="link-signup" href="/signup_page">Đăng ký</a>
+        <a id="link-cart" href="/cart_page">Giỏ mượn</a>
+        <a id="link-group" href="/chat_group_page">Hội nhóm</a>
+        {% endif %}
+    </div>
+</div>
+<div class="navbar">
+    <a id="link-homepage" href="/">Trang chủ</a>
+    <a id="link-intro" href="intro.html">Giới thiệu</a>
+    <a id="link-search" href="/search_page">Tra cứu</a>
+    <a id="link-stats" href="/stats_page">Thống kê</a>
+</div>
+
+<div class="container">
+    <div class="func">
+        <a id="link-searchbook" href="search_book.html">Tra cứu sách</a><br>
+        <a id="link-searchuser" href="search_user.html">Tra cứu người dùng</a><br>
+        <a id="link-searchgroup" href="search_group.html">Tra cứu hội nhóm</a>
+    </div>
+    <div class="main">
+        <div class="main-book_info">
+            <div class="book_info-image"><img src="{{ url_for('static', filename='images/book_placeholder.png') }}"></div>
+            <div class="book_info-name">{{ book_info['title'] }}</div>
+            <div class="book_info-categories">{{ book_info['categoryname'] }}</div>
+            <div class="book_info-authors">{{ book_info['authorname'] }}</div>
+            <div class="book_info-publish_year">Năm xuất bản: {{ book_info['publishyear'] }}</div>
+            <div class="book_info-rent_count">Lượt mượn: {{ count_rent['numborrowedbooks']}}</div>
+            <div class="book_info-rating">
+                <span>⭐</span><span>{{ book_info['averagerate'] or 'Chưa có đánh giá' }}</span><span>/5 (</span><span>{{ count_rate['numratedbook'] }}</span><span>)</span>
+            </div>
+            <div class="book_info-quantity">Còn: <span>{{ book_info['quantity'] }}</span></div>
+            <div class="book_info-rent">
+                {% if session.get('blockrent') == False and session.get('user_role') == 'Customer' %}
+                <a href="{{ url_for('add_to_cart', book_id=book_info['bookid']) }}">
+                    <button type="button">Đưa vào giỏ mượn</button>
+                </a>
+                {% endif %}
+            </div>            
+        </div>
+
+        <div class="book_info-same_authors_header"><p>Sách cùng tác giả</p></div>
+        <div class="book_info-same_authors">
+            <div class="list-book">
+                {% for same_author_book in same_author_books %}
+                <a href="/book_info_page/{{ same_author_book['book_id'] }}">
+                    <img src="{{ url_for('static', filename='images/book_placeholder.png') }}"><br>
+                    <span>{{ same_author_book['title'] }}</span><br>
+                    <span>{{ same_author_book['authorname'] }}</span>
+                </a>
+                {% endfor %}
+            </div>
+        </div>
+        <div class="book_info-same_categories_header"><p>Sách cùng thể loại</p></div>
+        <div class="book_info-same_categories">
+            <div class="list-book">
+                {% for same_category_book in same_category_books %}
+                <a href="/book_info_page/{{ same_category_book['book_id'] }}">
+                    <img src="{{ url_for('static', filename='images/book_placeholder.png') }}"><br>
+                    <span>{{ same_category_book['title'] }}</span><br>
+                    <span>{{ same_category_book['authorname'] }}</span>
+                </a>
+                {% endfor %}
+            </div>
+        </div>
+    </div>
+
+    <div class="right">
+        <div class="add_comment_cell">
+            <form action="{{ url_for('submit_review', book_id=book_info['bookid']) }}" method="POST">
+                <div class="star_pick">
+                    <input type="radio" id="star5" name="rating" value="5"><label for="star5">5⭐</label>
+                    <input type="radio" id="star4" name="rating" value="4"><label for="star4">4⭐</label>
+                    <input type="radio" id="star3" name="rating" value="3"><label for="star3">3⭐</label>
+                    <input type="radio" id="star2" name="rating" value="2"><label for="star2">2⭐</label>
+                    <input type="radio" id="star1" name="rating" value="1"><label for="star1">1⭐</label>
+                </div>
+                <textarea name="comment" placeholder="Nhận xét"></textarea>
+                <button type="submit">Gửi đánh giá</button>
+            </form>
+        </div>
+        <hr>
+        <div class="comment_section">
+            {% for comment in comments %}
+            <div class="comment_cell">
+                <b><span>{{ comment['ratefullname'] }}</span> |
+                    <span>{{ comment['ratecommenttime'] }}</span></b><br>
+                <span>⭐</span><span>{{ comment['ratestar'] }}</span><span>/5</span><br>
+                <span>{{ comment['commentbook'] }}</span>
+            </div>
+            <hr>
+            {% endfor %}
+        </div>
+    </div>
+</div>
+
+
+
+
+
+<script type="text/javascript">
+</script>
+
+</body>
+</html>
