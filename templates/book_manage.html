@@ -1,0 +1,139 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<title>HUSTLib - Thư viện của sinh viên BKHN</title>
+	<link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}">
+	<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Verdana">
+		<!-- <link rel='stylesheet' href='https://cdn-uicons.flaticon.com/uicons-brands/css/uicons-brands.css'>
+			<link rel='stylesheet' href='https://cdn-uicons.flaticon.com/uicons-bold-straight/css/uicons-bold-straight.css'> -->
+		</head>
+		<body>
+
+			<div class="banner">
+				<img src="{{ url_for('static', filename='images/banner.png') }}" class="banner-image">
+				<div class="banner-login">
+        <a id="link-group" href="/search_rent_page">Quản lí</a>
+					<a id="link-cart" href="/cart_page">Giỏ mượn</a>
+					<a id="link-group" href="/chat_group_page">Hội nhóm</a>
+					<a id="link-profile" href="/profile_page">Hồ sơ</a>
+					<a id="link-login" href="/login_page">Đăng nhập</a>
+					<a id="link-signup" href="/signup_page">Đăng ký</a>
+				</div>
+			</div>
+			<div class="navbar">
+				<a id="link-homepage" href="/">Trang chủ</a>
+				<a id="link-intro" href="intro.html">Giới thiệu</a>
+				<!-- <a id="link-news" href="index.html">Tin tức</a> -->
+				<a id="link-search" href="/search_page">Tra cứu</a>
+				<a id="link-stats" href="/stats_page">Thống kê</a>
+			</div>
+
+			<div class="container">
+				<div class="func">
+					<a id="link-searchbook" href="/search_rent_page">Quản lí đơn mượn</a><br>
+          <a id="link-searchuser" href="/book_manage_page">Cập nhật CSDL sách</a><br>
+          <a id="link-searchuser" href="/book_insert_page">Thêm sách mới</a><br>
+          <a id="link-searchuser" href="/blacklist_manage_page">Quản lí danh sách đen</a>
+				</div>
+				<div class="main">
+          <div class="book-manage-item">
+            <table>
+              <tr>
+                <th class="text-right w6">ID</th>
+                <td>1</td>
+                <td class="text-right w6"><a href="/book_update_page">Chỉnh sửa</a></td>
+              </tr>
+              <tr>
+                <th class="text-right">Tên sách</th>
+                <td>Giáo trình Giải tích 1Giáo trình Giải tích 1Giáo trình Giải tích 1GiáoGiáo trình Giải tích 1Giáo trình Giải tích 1 trình Giải tích 1</td>
+              </tr>
+              <tr>
+                <th class="text-right">Tác giả</th>
+                <td>Trần Phạm Nguyên Phú<br>Boulevard des Airs</td>
+              </tr>
+              <tr>
+                <th class="text-right">Thể loại</th>
+                <td>Giáo trình, tài liệu chuyên ngành<br>Lý luận chính trị</td>
+              </tr>
+              <tr>
+                <th class="text-right">NXB</th>
+                <td>NXB Bách khoa Hà Nội</td>
+              </tr>
+              <tr>
+                <th class="text-right">Năm XB</th>
+                <td>2017</td>
+              </tr>
+            </table>
+          </div>
+
+          <div class="book-manage-item">
+            <table>
+              <tr>
+                <th class="text-right w6">ID</th>
+                <td>1</td>
+                <td class="text-right w6"><a href="/book_update_page">Chỉnh sửa</a></td>
+              </tr>
+              <tr>
+                <th class="text-right">Tên sách</th>
+                <td>Giáo trình Giải tích 1Giáo trình Giải tích 1Giáo trình Giải tích 1GiáoGiáo trình Giải tích 1Giáo trình Giải tích 1 trình Giải tích 1</td>
+              </tr>
+              <tr>
+                <th class="text-right">Tác giả</th>
+                <td>Trần Phạm Nguyên Phú<br>Boulevard des Airs</td>
+              </tr>
+              <tr>
+                <th class="text-right">Thể loại</th>
+                <td>Giáo trình, tài liệu chuyên ngành<br>Lý luận chính trị</td>
+              </tr>
+              <tr>
+                <th class="text-right">NXB</th>
+                <td>NXB Bách khoa Hà Nội</td>
+              </tr>
+              <tr>
+                <th class="text-right">Năm XB</th>
+                <td>2017</td>
+              </tr>
+            </table>
+          </div>
+				</div>
+
+				<div class="right">
+          <form action="/search_page" method="GET" accept-charset="UTF-8">
+            <label for="title"><b>Tên sách</b></label>
+            <input type="text" name="title">
+
+            <label for="author"><b>Tác giả</b></label>
+            <input type="text" name="author">
+
+            <label for="category"><b>Thể loại</b></label><br>
+            <select name="category">
+                <option value="0">Chọn thể loại</option>
+                {% for category in categories %}
+                    <option value="{{ category.categoryid }}">{{ category.categoryname }}</option>
+                {% endfor %}
+            </select><br>
+
+            <label for="publisher"><b>Nhà xuất bản</b></label>
+            <select name="publisher">
+                <option value="0">Chọn nhà xuất bản</option>
+                {% for publisher in publishers %}
+                    <option value="{{ publisher.publisherid }}">{{ publisher.name }}</option>
+                {% endfor %}
+            </select>
+
+            <label for="publish_year"><b>Năm xuất bản</b></label>
+            <input type="number" name="publish_year">
+
+            <button type="submit">Tìm kiếm</button>
+          </form>
+
+          <a><button>Thêm sách mới</button></a>
+        </div>
+				
+			</div>
+
+			<script type="text/javascript">
+			</script>
+
+		</body>
+		</html>
